@@ -14,7 +14,7 @@ function Player() {
   this.playing = false;
   this.loading = false;
   this.seekClicked = false; //Keep track of user clicking the seek slider
-  this.restartTrackMode = false; // Jump to previous track by default
+  this.restartTrackTime = Date.now(); // Jump to previous track by default
 
   //EVENT HANDLERS
   this.handleOnPlay = () => {
@@ -64,23 +64,19 @@ function Player() {
   }
 
   //BUTTON HANDLERS
-  this.handleForwardButtonDown = () => {
-    let toggleModeAfterMs = 500;
-    
-    timerInterval = setTimeout(function(){
-      restartTrackMode = true;
-    }, toggleModeAfterMs);
+  this.handleBackButtonDown = () => {
+    this.restartTrackTime = Date.now();
   }
 
   this.handleBackButtonUp = () => {
     if (!this.current) return log.error('Please load a song first.');
 
-    if (this.restartTrackMode){
-      this.restartTrackMode = false;
+    const restartTrackMs = 250;
+    if (Date.now() - this.restartTrackTime > restartTrackMs) {
       this.current = this.queue[this.queuePosition];
       this.album = this.current.albumId ? this.current.albumId : null; //Update album in case we're in a feed
     }else{
-      if (this.queuePosition <= 0){
+      if (this.queuePosition <= 0) {
         log.error("Can't go further back in time, Morty.");
       } else {
         this.current = this.queue[--this.queuePosition];
