@@ -14,6 +14,7 @@ function Player() {
   this.playing = false;
   this.loading = false;
   this.seekClicked = false; //Keep track of user clicking the seek slider
+  this.restartTrackTime = Date.now(); // Jump to previous track by default
 
   //EVENT HANDLERS
   this.handleOnPlay = () => {
@@ -63,15 +64,24 @@ function Player() {
   }
 
   //BUTTON HANDLERS
-  this.handleBackButton = () => {
+  this.handleBackButtonDown = () => {
+    this.restartTrackTime = Date.now();
+  }
+
+  this.handleBackButtonUp = () => {
     if (!this.current) return log.error('Please load a song first.');
-  
-    //Check if we are past the 5 second mark of current song
-    if(this.audio.currentTime < 5 && this.queuePosition < 1) {
-      log.error("Can't go further back in time, Morty.");
-    } else {
-      this.current = this.queue[--this.queuePosition];
+
+    const restartTrackMs = 250;
+    if (Date.now() - this.restartTrackTime > restartTrackMs) {
+      this.current = this.queue[this.queuePosition];
       this.album = this.current.albumId ? this.current.albumId : null; //Update album in case we're in a feed
+    }else{
+      if (this.queuePosition <= 0) {
+        log.error("Can't go further back in time, Morty.");
+      } else {
+        this.current = this.queue[--this.queuePosition];
+        this.album = this.current.albumId ? this.current.albumId : null; //Update album in case we're in a feed
+      }
     }
 
     this.playing = false;
@@ -85,6 +95,7 @@ function Player() {
     this.play();
   }
 
+
   this.handleForwardButton = () => {
     if (!this.current) return log.error('Please load a song first.');
     if (this.queuePosition >= this.queue.length - 1) return log.error('No song left in queue.');
@@ -97,6 +108,7 @@ function Player() {
     this.updateSrc();
     this.play();
   }
+
 
   this.handleSeekChange = (e) => {
     this.seekClicked = false;
@@ -362,7 +374,8 @@ function Player() {
     this.updateSeekStyle(volume);
 
     //Add listeners
-    backButton.onclick = this.handleBackButton;
+    backButton.onmouseup = this.handleBackButtonUp;
+    backButton.onmousedown = this.handleBackButtonDown;
     playButton.onclick = this.handlePlayButton;
     forwardButton.onclick = this.handleForwardButton;
     this.audio.onended = this.handleOnEnded;

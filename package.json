@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=production electron .",
-    "dev": "NODE_ENV=development electron .",
+    "start": "set NODE_ENV=production electron .",
+    "dev": "set NODE_ENV=development electron .",
     "test_server": "NODE_ENV=test electron .",
     "build_osx": "electron-packager . ohm --platform=darwin --arch=x64 --out ./dist/ --overwrite --icon=./src/assets/icon/icon.icns ; echo 'Built for OSX'",
     "build_linux": "electron-packager . ohm --platform=linux  --arch=x64 --out ./dist/ --overwrite --icon=./src/assets/icon/icon.png ; echo 'Built for LINUX'",
