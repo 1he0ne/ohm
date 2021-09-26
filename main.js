@@ -70,7 +70,7 @@ app.whenReady().then(() => {
   }
 
   //Register global shortcuts
-  globalfShortcut.register('CommandOrControl+Q', app.quit);
+  globalShortcut.register('CommandOrControl+Q', app.quit);
 
   createTray();
   createWindow();
