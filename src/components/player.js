@@ -109,6 +109,7 @@ function Player() {
     this.play();
   }
 
+
   this.handleSeekChange = (e) => {
     this.seekClicked = false;
     if (!this.audio.duration) return; //Audio not loaded
