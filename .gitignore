@@ -8,3 +8,4 @@ tags.temp
 .env.development
 .env.production
 .DS_Store
+.vs
